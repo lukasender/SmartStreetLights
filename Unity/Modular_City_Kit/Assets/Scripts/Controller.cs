@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using SmartStreetLights.Exception;
+using SmartStreetLights.State;
 
 public class Controller : MonoBehaviour {
 	
@@ -26,6 +27,7 @@ public class Controller : MonoBehaviour {
 	/// </summary>
 	private Vector3 _tolerance = new Vector3(0, 0, 0);
 	
+	private List<StreetLight> _running = new List<StreetLight>();
 
 	// Use this for initialization
 	void Start () {	
@@ -48,53 +50,15 @@ public class Controller : MonoBehaviour {
 					int id = GetIdOfPosition(realHP);
 					Debug.Log("id found: " + id);
 					StreetLight light = GetLightById(id);
-					light.OnOff();
+					//light.ToggleOnOff();
+					_running.Add(light);
 				} catch (LightNotFoundException e) {
 					Debug.Log(e.Message);	
 				}
 			}
 		}
-		
-		/*
-		int size = getStreetLights().Length / 2;
-		StreetLight[] test = new StreetLight[size];
-		for (int i = 0; i < size; i++) {
-			test[i] = getStreetLights()[i];
-		}
-		DimOnOff(test);
-		*/
-	}
-	
-	bool dimUp = true;
-	
-	void DimOnOff(StreetLight[] lights) {
-		if (!DimUpGroup(lights) && dimUp) {
-			DimUpGroup(lights);
-		} else {
-			dimUp = false;
-		}
-		
-		if (!DimDownGroup(lights) && !dimUp) {
-			DimDownGroup(lights);
-		} else {
-			dimUp = true;
-		}
-	}
-	
-	private bool DimUpGroup(StreetLight[] lights) {
-		bool maxLevelReached = false;
-		foreach (StreetLight l in lights) {
-			maxLevelReached = l.DimUp(_dimStep);
-		}
-		return maxLevelReached;
-	}
-	
-	private bool DimDownGroup(StreetLight[] lights) {
-		bool minLevelReached = false;
-		foreach (StreetLight l in lights) {
-			minLevelReached = l.DimDown(_dimStep);
-		}
-		return minLevelReached;
+		PerformRunnings();
+		CleanRunnings();
 	}
 	
 	private StreetLight[] GetStreetLights() {
@@ -112,8 +76,8 @@ public class Controller : MonoBehaviour {
 		int id = 1;
 		_streetLights = GetStreetLights();
 		for (int i = 0; i < _streetLights.Length; i++) {
-			_streetLights[i].setId(id++);
-			_streetLights[i].setMaxIntensity(_maxIntensity);
+			_streetLights[i].SetId(id++);
+			_streetLights[i].SetMaxIntensity(_maxIntensity);
 		}
 		Debug.Log("SmartStreetLights count: " + id);
 	}
@@ -139,7 +103,7 @@ public class Controller : MonoBehaviour {
 	private int GetIdOfPosition(Vector3 position) {
 		foreach (StreetLight l in GetStreetLights()) {
 			if (InRangeIncludeTolerance(l.transform.position, position)) {
-				return l.getId();
+				return l.GetId();
 			}
 		}
 		
@@ -169,5 +133,36 @@ public class Controller : MonoBehaviour {
 		}
 		
 		return false;
+	}
+	
+	private void AddLightToRunning(StreetLight light) {
+		bool alreadyInList = false;
+		foreach (StreetLight l in _running) {
+			if (l.GetId() == light.GetId()) {
+				alreadyInList = true;
+			}
+		}
+		if (!alreadyInList) {
+			_running.Add(light);
+		}
+	}
+	
+	private void PerformRunnings() {
+		foreach (StreetLight l in _running) {
+			l.DimUp(_dimStep);
+		}
+	}
+	
+	private void CleanRunnings() {
+		List<StreetLight> zombies = new List<StreetLight>();
+		foreach (StreetLight l in _running) {
+			if (!l.IsRunning()) {
+				zombies.Add(l);
+			}
+		}
+		foreach (StreetLight l in zombies) {
+			Debug.Log("Cleaning zombie: " + l.GetId());
+			_running.Remove(l);
+		}
 	}
 }

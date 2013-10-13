@@ -46,6 +46,11 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\Controller.cs" />
      <Compile Include="Assets\Scripts\LightNotFoundException.cs" />
+     <Compile Include="Assets\Scripts\State\DimmingDownState.cs" />
+     <Compile Include="Assets\Scripts\State\DimmingUpState.cs" />
+     <Compile Include="Assets\Scripts\State\OffState.cs" />
+     <Compile Include="Assets\Scripts\State\OnState.cs" />
+     <Compile Include="Assets\Scripts\State\State.cs" />
      <Compile Include="Assets\Scripts\StreetLight.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

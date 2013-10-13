@@ -1,12 +1,6 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Controller.cs">
-    <Files>
-      <File FileName="Assets/Scripts/Controller.cs" Line="153" Column="35" />
-      <File FileName="Assets/Scripts/StreetLight.cs" Line="68" Column="4" />
-      <File FileName="Assets/Scripts/LightNotFoundException.cs" Line="1" Column="1" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

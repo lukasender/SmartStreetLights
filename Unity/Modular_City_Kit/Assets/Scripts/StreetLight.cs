@@ -1,122 +1,79 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+using SmartStreetLights.State;
+
 public class StreetLight : MonoBehaviour {
 	
 	private int _id;
-	float _maxIntensity;
+	private float _maxIntensity;
 	
-	public int getId() {
+	private State _state;
+	
+	public int GetId() {
 		return _id;
 	}
 	
-	public void setId(int id) {
+	public void SetId(int id) {
 		_id = id;
 	}
 	
-	public void setMaxIntensity(float max) {
+	public void SetMaxIntensity(float max) {
 		_maxIntensity = max;
 	}
-
+	public float GetMaxIntensity() {
+		return _maxIntensity;
+	}
+	
 	// Use this for initialization
 	void Start () {
 		light.color = Color.white;
 		light.intensity = 0;
+		SetState(new OffState());
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
 	}
-
-	public bool DimUp(float step) {
-		Debug.Log("called DimUp()");
-		if (light.intensity < _maxIntensity) {
-			if ((light.intensity + step) >= _maxIntensity) {
-				light.intensity = _maxIntensity;
-				Debug.Log("StreetLight.DimUp(): max level reached");
-				return true; // max level reached
-			} else {
-				light.intensity += step;
-				Debug.Log ("StreetLight.DimUp(): set light.intensity to '" + light.intensity + "'");
-				return false; // max level not reached
-			}
-		}
-		return false;
+	
+	public Light GetLight() {
+		return light;
 	}
 	
-	public bool DimDown(float step) {
-		if (light.intensity > 0) {
-			if ((light.intensity - step) <= 0) {
-				light.intensity = 0;
-				Debug.Log("StreetLight.DimUp(): min level reached");
-				return true; // min level reached
-			} else {
-				light.intensity -= step;
-				return false; // min level not reached
-			}
-		}
-		
-		return false;
-	}
-	
-	public void OnOff() {
-		if (light.intensity > 0) {
-			light.intensity = 0;
+	public void ToggleOnOff() {
+		if (light.intensity >= _maxIntensity) {
+			Off();
 		} else {
-			light.intensity = _maxIntensity;
+			DimUp(0.1f);
 		}
 	}
 	
-	/*
-	public abstract class State {
-		float _maxIntensity;
-		State(float maxIntensity) {
-			_maxIntensity = maxIntensity;
-		}
-		public abstract bool On(Light light);
-		public abstract bool Off(Light light);
-		public abstract bool DimUp(Light light, float step);
-		public abstract bool DimDown(Light light, float step);
+	public void On() {
+		_state.On(this);
+	}
+
+	public void Off() {
+		_state.Off(this);
+	}
+
+	public void DimUp(float step) {
+		_state.DimUp(this, step);
 	}
 	
-	public class OnState : State {
-		
-	}
-	public class MinLevelState : State {
-		public bool DimUp(Light light, float step) {
-			return false;
-		}
-		bool DimDown(Light light, float step) {
-			return false;
-		}
+	public void DimDown(float step) {
+		_state.DimDown(this, step);
 	}
 	
-	public class MaxLevelState : State {
-		bool DimUp(Light light, float step) {
-			return false;
-		}
-		bool DimDown(Light light, float step) {
-			return false;
-		}
+	public void SetState(State state) {
+		Debug.Log("SSL: " + _id + ", SetState: " + state.GetType());
+		_state = state;
 	}
 	
-	public class DimmingUpState : State {
-		public bool DimUp(Light light, float step) {
-			Debug.Log("called DimUp()");
-			if (light.intensity < _maxIntensity) {
-				if ((light.intensity + step) >= _maxIntensity) {
-					light.intensity = _maxIntensity;
-					Debug.Log("StreetLight.DimUp(): max level reached");
-					return true; // max level reached
-				} else {
-					light.intensity += step;
-					Debug.Log ("StreetLight.DimUp(): set light.intensity to '" + light.intensity + "'");
-					return false; // max level not reached
-				}
-			}
-			return false;
+	public bool IsRunning() {
+		if (_state.GetType() == typeof(DimmingUpState) || _state.GetType() == typeof(DimmingDownState)) {
+			return true;
 		}
+		return false;
 	}
-	*/
 }
