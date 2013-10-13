@@ -51,7 +51,7 @@ public class Controller : MonoBehaviour {
 					Debug.Log("id found: " + id);
 					StreetLight light = GetLightById(id);
 					//light.ToggleOnOff();
-					_running.Add(light);
+					AddLightToRunning(light);
 				} catch (LightNotFoundException e) {
 					Debug.Log(e.Message);	
 				}
@@ -140,6 +140,7 @@ public class Controller : MonoBehaviour {
 		foreach (StreetLight l in _running) {
 			if (l.GetId() == light.GetId()) {
 				alreadyInList = true;
+				break;
 			}
 		}
 		if (!alreadyInList) {
@@ -160,9 +161,12 @@ public class Controller : MonoBehaviour {
 				zombies.Add(l);
 			}
 		}
-		foreach (StreetLight l in zombies) {
-			Debug.Log("Cleaning zombie: " + l.GetId());
-			_running.Remove(l);
+		if (zombies.Count > 0) {
+			foreach (StreetLight l in zombies) {
+				Debug.Log("Cleaning zombie: " + l.GetId());
+				_running.Remove(l);
+			}
+			Debug.Log("Cleaned '" + zombies.Count + "' zombie(s)");
 		}
 	}
 }
