@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\Controller.cs" />
+     <Compile Include="Assets\Scripts\LightBox.cs" />
      <Compile Include="Assets\Scripts\LightNotFoundException.cs" />
      <Compile Include="Assets\Scripts\State\DimmingDownState.cs" />
      <Compile Include="Assets\Scripts\State\DimmingUpState.cs" />

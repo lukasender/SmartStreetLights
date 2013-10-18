@@ -11,8 +11,8 @@ public class Controller : MonoBehaviour {
 	private float _dimStep = 0.1f;
 	
 	public List<StreetLight> lights = new List<StreetLight>();
-	// An array of all SmartStreetLights
-	private StreetLight[] _streetLights = null;
+	// An array of all LightBox'es
+	private LightBox[] _lightBoxes = null;
 	
 	/// <summary>
 	/// Offset of the "SmartStreetLights" group.
@@ -25,7 +25,7 @@ public class Controller : MonoBehaviour {
 	/// The tolerance has the size of a 'Box' (which is a member of "SmartStreetLight".
 	/// It will be used to provide a tolerance when selecting a "SmartStreetLight".
 	/// </summary>
-	private Vector3 _tolerance = new Vector3(0, 0, 0);
+	private Vector3 _lightBoxScale = new Vector3(0, 0, 0);
 	
 	private List<StreetLight> _running = new List<StreetLight>();
 
@@ -33,18 +33,18 @@ public class Controller : MonoBehaviour {
 	void Start () {	
 		InitializeLights();
 		_lgOffset = GetLightsGroupOffset();
-		_tolerance = GetBoxSize();
+		_lightBoxScale = GetBoxSize();
 	}
 	
 	// Update is called once per frame
-	void Update () {		
+	void Update () {
 		if (Input.GetMouseButtonDown(0)) {
 			RaycastHit hit;
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			if (Physics.Raycast(ray, out hit) && hit.transform.name == "Box") {
 				Vector3 hitPoint = hit.point;
 				Vector3 realHP = hitPoint - _lgOffset;
-				Debug.Log("----------> Mouse: hit: " + hitPoint + ", realHP: " + realHP);
+				Debug.Log("Mouse: hit: " + hitPoint + ", realHP: " + realHP);
 				
 				try {
 					int id = GetIdOfPosition(realHP);
@@ -53,7 +53,7 @@ public class Controller : MonoBehaviour {
 					//light.ToggleOnOff();
 					AddLightToRunning(light);
 				} catch (LightNotFoundException e) {
-					Debug.Log(e.Message);	
+					Debug.Log("Controller.Update(): " + e.Message);	
 				}
 			}
 		}
@@ -61,25 +61,26 @@ public class Controller : MonoBehaviour {
 		CleanRunnings();
 	}
 	
-	private StreetLight[] GetStreetLights() {
-		if (_streetLights == null) {
-			_streetLights = GameObject.FindObjectsOfType(typeof(StreetLight)) as StreetLight[];
-			foreach (StreetLight l in _streetLights) {
-				Debug.Log("Found SSL at: " + l.transform.position);
+	private LightBox[] GetLightBoxes() {
+		if (_lightBoxes == null) {
+			_lightBoxes = GameObject.FindObjectsOfType(typeof(LightBox)) as LightBox[];
+			foreach (LightBox lb in _lightBoxes) {
+				Debug.Log("Found LightBox at: " + lb.transform.position);
 			}
 		}
-		Debug.Log ("streetLights.length: " + _streetLights.Length);
-		return _streetLights;
+		Debug.Log("lightBoxes.Length: " + _lightBoxes.Length);
+		return _lightBoxes;
 	}
 	
 	private void InitializeLights() {
-		int id = 1;
-		_streetLights = GetStreetLights();
-		for (int i = 0; i < _streetLights.Length; i++) {
-			_streetLights[i].SetId(id++);
-			_streetLights[i].SetMaxIntensity(_maxIntensity);
+		_lightBoxes = GetLightBoxes();
+		
+		for (int i = 0; i < _lightBoxes.Length; i++) {
+			StreetLight light = (StreetLight) _lightBoxes[i].GetComponentInChildren(typeof(StreetLight));
+			_lightBoxes[i].SetStreetLight(i + 1, light);
+			_lightBoxes[i].GetStreetLight().SetMaxIntensity(_maxIntensity);
+			Debug.Log("Initialized LightBox and StreetLight with ID " + (i + 1));
 		}
-		Debug.Log("SmartStreetLights count: " + id);
 	}
 	
 	private Vector3 GetLightsGroupOffset() {
@@ -101,25 +102,24 @@ public class Controller : MonoBehaviour {
 	}
 	
 	private int GetIdOfPosition(Vector3 position) {
-		foreach (StreetLight l in GetStreetLights()) {
-			if (InRangeIncludeTolerance(l.transform.position, position)) {
-				return l.GetId();
+		foreach (LightBox lb in GetLightBoxes()) {
+			if (InRangeIncludeTolerance(lb.transform.position, position)) {
+				return lb.GetId();
 			}
 		}
-		
 		throw new LightNotFoundException();
 	}
 	
 	private StreetLight GetLightById(int id) {
-		if (id < 1 || id > GetStreetLights().Length) {
-			throw new LightNotFoundException();
+		if (id < 1 || id > GetLightBoxes().Length) {
+			throw new LightNotFoundException("GetLightById(): Light not found");
 		}
-		return GetStreetLights()[id-1];
+		return GetLightBoxes()[id-1].GetStreetLight();
 	}
 	
-	private bool InRangeIncludeTolerance(Vector3 v1, Vector3 v2) {
-		Vector3 v1_p = v1 + _tolerance;
-		Vector3 v1_m = v1 - _tolerance;
+	private bool InRangeIncludeTolerance(Vector3 v1, Vector3 v2) {		
+		Vector3 v1_p = v1 + _lightBoxScale;
+		Vector3 v1_m = v1 - _lightBoxScale;
 		Vector3 v2_offset = v2 + _lgOffset;
 		
 		if (v1_m.x <= v2_offset.x && v2_offset.x < v1_p.x
