@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using SmartStreetLights.Exception;
+using SmartStreetLights.Message;
 using SmartStreetLights.State;
 
 public class Controller : MonoBehaviour {
@@ -61,6 +62,16 @@ public class Controller : MonoBehaviour {
 		CleanRunnings();
 	}
 	
+	public void ReceiveMessage(Message message) {
+		try {
+			StreetLight light = GetLightById(message.id);
+			Debug.Log("id found: " + message.id);
+			AddLightToRunning(light);
+		} catch (LightNotFoundException e) {
+			Debug.Log("Controller.ReceiveMessage(): " + e.Message);	
+		}
+	}
+	
 	private LightBox[] GetLightBoxes() {
 		if (_lightBoxes == null) {
 			_lightBoxes = GameObject.FindObjectsOfType(typeof(LightBox)) as LightBox[];
@@ -79,6 +90,7 @@ public class Controller : MonoBehaviour {
 			StreetLight light = (StreetLight) _lightBoxes[i].GetComponentInChildren(typeof(StreetLight));
 			_lightBoxes[i].SetStreetLight(i + 1, light);
 			_lightBoxes[i].GetStreetLight().SetMaxIntensity(_maxIntensity);
+			_lightBoxes[i].SetController(this);
 			Debug.Log("Initialized LightBox and StreetLight with ID " + (i + 1));
 		}
 	}

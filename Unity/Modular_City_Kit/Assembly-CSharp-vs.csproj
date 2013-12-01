@@ -47,6 +47,8 @@
      <Compile Include="Assets\Scripts\Controller.cs" />
      <Compile Include="Assets\Scripts\LightBox.cs" />
      <Compile Include="Assets\Scripts\LightNotFoundException.cs" />
+     <Compile Include="Assets\Scripts\Message\Message.cs" />
+     <Compile Include="Assets\Scripts\Message\ObjectDetectedMessage.cs" />
      <Compile Include="Assets\Scripts\State\DimmingDownState.cs" />
      <Compile Include="Assets\Scripts\State\DimmingUpState.cs" />
      <Compile Include="Assets\Scripts\State\OffState.cs" />
