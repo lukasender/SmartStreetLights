@@ -52,15 +52,16 @@ public class LightBox : MonoBehaviour {
 	
 	void OnTriggerEnter(Collider other) {
 		Debug.Log("LightBox.OnTriggerEnter() - Object detected at light #" + _id);
-		SendMessageToServer(new ObjectDetectedMessage(GetId()));
+		SendMessageToServer(new ObjectEnterMessage(GetId()));
 	}
 	
 	void OnTriggerStay(Collider other) {
 		Debug.Log("LightBox.OnTriggerStay() - Object detected at light #" + _id);
-		SendMessageToServer(new ObjectDetectedMessage(GetId()));
+		//SendMessageToServer(new ObjectDetectedMessage(GetId()));
 	}
 	
 	void OnTriggerLeave(Collider other) {
 		Debug.Log("LightBox.OnTriggerLeave() - Object detected at light #" + _id);
+		SendMessageToServer(new ObjectLeaveMessage(GetId()));
 	}
 }
