@@ -44,6 +44,8 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Pixelplacement\iTweenPath\iTweenPath.cs" />
+     <Compile Include="Assets\Scripts\Car\Car.cs" />
      <Compile Include="Assets\Scripts\Controller.cs" />
      <Compile Include="Assets\Scripts\LightBox.cs" />
      <Compile Include="Assets\Scripts\LightNotFoundException.cs" />
@@ -57,6 +59,11 @@
      <Compile Include="Assets\Scripts\State\OnState.cs" />
      <Compile Include="Assets\Scripts\State\State.cs" />
      <Compile Include="Assets\Scripts\StreetLight.cs" />
+     <Compile Include="Assets\Spline\MathUtils.cs" />
+     <Compile Include="Assets\Spline\SplineController.cs" />
+     <Compile Include="Assets\Spline\SplineInterpolator.cs" />
+     <Compile Include="Assets\iTween\Plugins\iTween.cs" />
+     <None Include="Assets\iTween\ReadMe!\ReadMe!.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

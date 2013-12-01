@@ -119,7 +119,7 @@ public class Controller : MonoBehaviour {
 				return lb.GetId();
 			}
 		}
-		throw new LightNotFoundException();
+		throw new LightNotFoundException("LightNotFoundException: GetIdOfPosition()");
 	}
 	
 	private StreetLight GetLightById(int id) {

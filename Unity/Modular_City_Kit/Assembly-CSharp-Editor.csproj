@@ -5,11 +5,11 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>10.0.20506</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{2F667EB3-075C-0588-815D-C0EE7E4621C5}</ProjectGuid>
+	<ProjectGuid>{FEEC4828-3BDE-FA3A-E9FA-9CE65FFAB1CE}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace></RootNamespace>
-	<AssemblyName>Assembly-CSharp</AssemblyName>
+	<AssemblyName>Assembly-CSharp-Editor</AssemblyName>
 	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
 	<FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -44,26 +44,24 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Pixelplacement\iTweenPath\iTweenPath.cs" />
-     <Compile Include="Assets\Scripts\Car\Car.cs" />
-     <Compile Include="Assets\Scripts\Controller.cs" />
-     <Compile Include="Assets\Scripts\LightBox.cs" />
-     <Compile Include="Assets\Scripts\LightNotFoundException.cs" />
-     <Compile Include="Assets\Scripts\Message\Message.cs" />
-     <Compile Include="Assets\Scripts\Message\ObjectDetectedMessage.cs" />
-     <Compile Include="Assets\Scripts\Message\ObjectEnterMessage.cs" />
-     <Compile Include="Assets\Scripts\Message\ObjectLeaveMessage.cs" />
-     <Compile Include="Assets\Scripts\State\DimmingDownState.cs" />
-     <Compile Include="Assets\Scripts\State\DimmingUpState.cs" />
-     <Compile Include="Assets\Scripts\State\OffState.cs" />
-     <Compile Include="Assets\Scripts\State\OnState.cs" />
-     <Compile Include="Assets\Scripts\State\State.cs" />
-     <Compile Include="Assets\Scripts\StreetLight.cs" />
-     <Compile Include="Assets\Spline\MathUtils.cs" />
-     <Compile Include="Assets\Spline\SplineController.cs" />
-     <Compile Include="Assets\Spline\SplineInterpolator.cs" />
-     <Compile Include="Assets\iTween\Plugins\iTween.cs" />
+     <Compile Include="Assets\Pixelplacement\iTweenPath\Editor\iTweenPathEditor.cs" />
      <None Include="Assets\iTween\ReadMe!\ReadMe!.txt" />
+ <Reference Include="\Applications\Unity\Unity.app\Contents\Frameworks\Managed\UnityEditor.Graphs">
+ <HintPath>\Applications\Unity\Unity.app\Contents\Frameworks\Managed\UnityEditor.Graphs.dll</HintPath>
+ </Reference>
+ <Reference Include="\Applications\Unity\Unity.app\Contents\PlaybackEngines\iPhonePlayer\EditorExtensions\UnityEditor.iOS.Extensions">
+ <HintPath>\Applications\Unity\Unity.app\Contents\PlaybackEngines\iPhonePlayer\EditorExtensions\UnityEditor.iOS.Extensions.dll</HintPath>
+ </Reference>
+ <Reference Include="\Applications\Unity\Unity.app\Contents\PlaybackEngines\BB10Player\EditorExtensions\UnityEditor.BB10.Extensions">
+ <HintPath>\Applications\Unity\Unity.app\Contents\PlaybackEngines\BB10Player\EditorExtensions\UnityEditor.BB10.Extensions.dll</HintPath>
+ </Reference>
+ <Reference Include="\Applications\Unity\Unity.app\Contents\PlaybackEngines\AndroidPlayer\EditorExtensions\UnityEditor.Android.Extensions">
+ <HintPath>\Applications\Unity\Unity.app\Contents\PlaybackEngines\AndroidPlayer\EditorExtensions\UnityEditor.Android.Extensions.dll</HintPath>
+ </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp.csproj">
+      <Project>{2F667EB3-075C-0588-815D-C0EE7E4621C5}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
