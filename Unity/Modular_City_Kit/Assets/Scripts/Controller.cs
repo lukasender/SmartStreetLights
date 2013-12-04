@@ -168,6 +168,8 @@ public class Controller : MonoBehaviour {
 		foreach (StreetLightAction la in _running) {
 			if (la.light.GetId() == light.GetId()) {
 				alreadyInList = true;
+				// set the new action
+				la.action = action;
 				break;
 			}
 		}
