@@ -47,8 +47,9 @@
      <Compile Include="Assets\Pixelplacement\iTweenPath\iTweenPath.cs" />
      <Compile Include="Assets\Scripts\Car\Car.cs" />
      <Compile Include="Assets\Scripts\Controller.cs" />
-     <Compile Include="Assets\Scripts\LightBox.cs" />
-     <Compile Include="Assets\Scripts\LightNotFoundException.cs" />
+     <Compile Include="Assets\Scripts\Exception\LightNotFoundException.cs" />
+     <Compile Include="Assets\Scripts\Lights\LightBox.cs" />
+     <Compile Include="Assets\Scripts\Lights\StreetLight.cs" />
      <Compile Include="Assets\Scripts\Message\Message.cs" />
      <Compile Include="Assets\Scripts\Message\ObjectDetectedMessage.cs" />
      <Compile Include="Assets\Scripts\Message\ObjectEnterMessage.cs" />
@@ -58,7 +59,6 @@
      <Compile Include="Assets\Scripts\State\OffState.cs" />
      <Compile Include="Assets\Scripts\State\OnState.cs" />
      <Compile Include="Assets\Scripts\State\State.cs" />
-     <Compile Include="Assets\Scripts\StreetLight.cs" />
      <Compile Include="Assets\Spline\MathUtils.cs" />
      <Compile Include="Assets\Spline\SplineController.cs" />
      <Compile Include="Assets\Spline\SplineInterpolator.cs" />
