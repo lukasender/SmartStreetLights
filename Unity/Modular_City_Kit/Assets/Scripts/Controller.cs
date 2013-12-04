@@ -77,7 +77,8 @@ public class Controller : MonoBehaviour {
 		try {
 			StreetLight light = GetLightById(message.id);
 			Debug.Log("id found: " + message.id);
-			if (message.detectedObjects >= 1) {
+			Debug.Log("Message received: " + typeof(Message) + ", id: " + message.id + ", detectedObjects: " + message.detectedObjects);
+			if (message.detectedObjects > 0) {
 				AddLightToRunning(light, Action.DimUp);
 			} else {
 				AddLightToRunning(light, Action.DimDown);
