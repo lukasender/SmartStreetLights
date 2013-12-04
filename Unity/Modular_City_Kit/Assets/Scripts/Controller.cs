@@ -2,9 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
-using SmartStreetLights.Exception;
+using SmartStreetLights.Lights;
 using SmartStreetLights.Message;
 using SmartStreetLights.State;
+using SmartStreetLights.Exception;
 
 public class Controller : MonoBehaviour {
 	
@@ -28,7 +29,17 @@ public class Controller : MonoBehaviour {
 	/// </summary>
 	private Vector3 _lightBoxScale = new Vector3(0, 0, 0);
 	
-	private List<StreetLight> _running = new List<StreetLight>();
+	private List<StreetLightAction> _running = new List<StreetLightAction>();
+	
+	private class StreetLightAction {
+		public StreetLight light;
+		public Action action;
+		
+		public StreetLightAction(StreetLight light, Action action) {
+			this.light = light;
+			this.action = action;
+		}
+	}
 
 	// Use this for initialization
 	void Start () {	
@@ -52,7 +63,7 @@ public class Controller : MonoBehaviour {
 					Debug.Log("id found: " + id);
 					StreetLight light = GetLightById(id);
 					//light.ToggleOnOff();
-					AddLightToRunning(light);
+					AddLightToRunning(light, Action.DimUp);
 				} catch (LightNotFoundException e) {
 					Debug.Log("Controller.Update(): " + e.Message);	
 				}
@@ -66,7 +77,11 @@ public class Controller : MonoBehaviour {
 		try {
 			StreetLight light = GetLightById(message.id);
 			Debug.Log("id found: " + message.id);
-			AddLightToRunning(light);
+			if (message.detectedObjects >= 1) {
+				AddLightToRunning(light, Action.DimUp);
+			} else {
+				AddLightToRunning(light, Action.DimDown);
+			}
 		} catch (LightNotFoundException e) {
 			Debug.Log("Controller.ReceiveMessage(): " + e.Message);	
 		}
@@ -147,38 +162,60 @@ public class Controller : MonoBehaviour {
 		return false;
 	}
 	
-	private void AddLightToRunning(StreetLight light) {
+	private void AddLightToRunning(StreetLight light, Action action) {
 		bool alreadyInList = false;
-		foreach (StreetLight l in _running) {
-			if (l.GetId() == light.GetId()) {
+		foreach (StreetLightAction la in _running) {
+			if (la.light.GetId() == light.GetId()) {
 				alreadyInList = true;
 				break;
 			}
 		}
 		if (!alreadyInList) {
-			_running.Add(light);
+			_running.Add(new StreetLightAction(light, action));
 		}
 	}
 	
 	private void PerformRunnings() {
-		foreach (StreetLight l in _running) {
-			l.DimUp(_dimStep);
+		foreach (StreetLightAction la in _running) {
+			PerformLightAction(la, _dimStep);
 		}
 	}
 	
 	private void CleanRunnings() {
-		List<StreetLight> zombies = new List<StreetLight>();
-		foreach (StreetLight l in _running) {
-			if (!l.IsRunning()) {
-				zombies.Add(l);
+		List<StreetLightAction> zombies = new List<StreetLightAction>();
+		foreach (StreetLightAction la in _running) {
+			if (!la.light.IsRunning()) {
+				zombies.Add(la);
 			}
 		}
 		if (zombies.Count > 0) {
-			foreach (StreetLight l in zombies) {
-				Debug.Log("Cleaning zombie: " + l.GetId());
-				_running.Remove(l);
+			foreach (StreetLightAction la in zombies) {
+				Debug.Log("Cleaning zombie: " + la.light.GetId());
+				_running.Remove(la);
 			}
 			Debug.Log("Cleaned '" + zombies.Count + "' zombie(s)");
+		}
+	}
+	
+	private void PerformLightAction(StreetLightAction la, float dimStep) {
+		Action action = la.action;
+		StreetLight light = la.light;
+		switch (action) {
+		case Action.DimUp:
+			light.DimUp(dimStep);
+			break;
+		case Action.DimDown:
+			light.DimDown(dimStep);
+			break;
+		case Action.LightOn:
+			light.On();
+			break;
+		case Action.LightOff:
+			light.Off();
+			break;
+		default:
+			Debug.Log("Controller.PerformLightAction(): no action provided");
+			throw new UnityException("No Action provided!");
 		}
 	}
 }

@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 
+using SmartStreetLights.Lights;
+
 namespace SmartStreetLights.State
 {
 	public class OnState : State {

@@ -49,6 +49,7 @@
      <Compile Include="Assets\Scripts\Controller.cs" />
      <Compile Include="Assets\Scripts\Exception\LightNotFoundException.cs" />
      <Compile Include="Assets\Scripts\GUI\Main.cs" />
+     <Compile Include="Assets\Scripts\Lights\Action.cs" />
      <Compile Include="Assets\Scripts\Lights\LightBox.cs" />
      <Compile Include="Assets\Scripts\Lights\StreetLight.cs" />
      <Compile Include="Assets\Scripts\Message\Message.cs" />

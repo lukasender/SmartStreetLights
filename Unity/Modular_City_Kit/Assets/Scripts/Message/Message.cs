@@ -12,18 +12,22 @@ namespace SmartStreetLights.Message
 		/// </summary>
 		public int id;
 		
-		public Message (int id)
+		public int detectedObjects;
+		
+		public Message (int id, int detectedObjects)
 		{
 			this.id = id;
+			this.detectedObjects = detectedObjects;
 		}
 		
-		public Message(int id, String message) {
+		public Message(int id, int detectedObjects, String message) {
 			this.id = id;
+			this.detectedObjects = detectedObjects;
 			this.message = message;
 		}
 		
 		public override string ToString () {
-			return string.Format (message + ", id: " + id);
+			return string.Format (message + ", id: " + id + ", detectedObjects: " + detectedObjects);
 		}
 	}
 }
