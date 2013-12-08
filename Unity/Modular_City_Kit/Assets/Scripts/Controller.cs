@@ -58,27 +58,6 @@ public class Controller : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		/*
-		if (Input.GetMouseButtonDown(0)) {
-			RaycastHit hit;
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			if (Physics.Raycast(ray, out hit) && hit.transform.name == "Box") {
-				Vector3 hitPoint = hit.point;
-				Vector3 realHP = hitPoint - _lgOffset;
-				Debug.Log("Mouse: hit: " + hitPoint + ", realHP: " + realHP);
-				
-				try {
-					int id = GetIdOfPosition(realHP);
-					Debug.Log("id found: " + id);
-					StreetLight light = GetLightById(id);
-					//light.ToggleOnOff();
-					AddLightToRunning(light, Action.DimUp);
-				} catch (LightNotFoundException e) {
-					Debug.Log("Controller.Update(): " + e.Message);	
-				}
-			}
-		}
-		*/
 		PerformRunnings();
 		CleanRunnings();
 	}

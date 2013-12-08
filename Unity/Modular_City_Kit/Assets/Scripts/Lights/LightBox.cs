@@ -15,9 +15,6 @@ namespace SmartStreetLights.Lights {
 		
 		private Controller _controller;
 		
-		//private Boolean _OnTriggerStayCalling;
-		//private float MAX_TIME = 5; // sec
-		
 		public LightBox () {
 		}
 		
@@ -46,14 +43,11 @@ namespace SmartStreetLights.Lights {
 		// Use this for initialization
 		void Start () {
 			_objectsDetected = 0;
-			//_OnTriggerStayCalling = false;
 		}
 		
 		// Update is called once per frame
 		void Update () {
-			//if (!_OnTriggerStayCalling && (Time.deltaTime % MAX_TIME == 0)) {
-			//	_objectsDetected = 0;
-			//}
+			
 		}
 		
 		public int GetCurrentDetectedObjects() {
@@ -71,9 +65,7 @@ namespace SmartStreetLights.Lights {
 		}
 		
 		void OnTriggerStay(Collider other) {
-			//_OnTriggerStayCalling = true;
-			//Debug.Log("LightBox.OnTriggerStay() - Object detected at light #" + _id);
-			//SendMessageToServer(new ObjectDetectedMessage(GetId()));
+			
 		}
 		
 		void OnTriggerExit(Collider other) {
@@ -82,7 +74,6 @@ namespace SmartStreetLights.Lights {
 			}
 			Debug.Log("LightBox.OnTriggerExit() - Object detected at light #" + _id);
 			SendMessageToServer(new ObjectLeaveMessage(GetId(), GetCurrentDetectedObjects()));
-			//_OnTriggerStayCalling = false;
 		}
 		
 	}
