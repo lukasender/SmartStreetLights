@@ -17,6 +17,10 @@ public class Controller : MonoBehaviour {
 	// An array of all LightBox'es
 	private LightBox[] _lightBoxes = null;
 	
+	private Car[] _cars = null;
+	
+	private Camera _mainCamera = null;
+	
 	/// <summary>
 	/// Offset of the "SmartStreetLights" group.
 	/// The group contains all the other SmartStreetLights.
@@ -31,8 +35,6 @@ public class Controller : MonoBehaviour {
 	private Vector3 _lightBoxScale = new Vector3(0, 0, 0);
 	
 	private List<StreetLightAction> _running = new List<StreetLightAction>();
-	
-	private float _sphereColliderScale;
 	
 	private class StreetLightAction {
 		public StreetLight light;
@@ -49,10 +51,14 @@ public class Controller : MonoBehaviour {
 		InitializeLights();
 		_lgOffset = GetLightsGroupOffset();
 		_lightBoxScale = GetBoxSize();
+		_cars = GetCars();
+		_mainCamera = GameObject.Find("Main Camera").camera;
+		SwitchToMainCamera();
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		/*
 		if (Input.GetMouseButtonDown(0)) {
 			RaycastHit hit;
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -72,6 +78,7 @@ public class Controller : MonoBehaviour {
 				}
 			}
 		}
+		*/
 		PerformRunnings();
 		CleanRunnings();
 	}
@@ -79,7 +86,6 @@ public class Controller : MonoBehaviour {
 	public void ReceiveMessage(Message message) {
 		try {
 			StreetLight light = GetLightById(message.id);
-			Debug.Log("id found: " + message.id);
 			Debug.Log("Message received: " + typeof(Message) + ", id: " + message.id + ", detectedObjects: " + message.detectedObjects);
 			if (message.detectedObjects > 0) {
 				AddLightToRunning(light, Action.DimUp);
@@ -97,9 +103,20 @@ public class Controller : MonoBehaviour {
 			foreach (LightBox lb in _lightBoxes) {
 				Debug.Log("Found LightBox at: " + lb.transform.position);
 			}
+			Debug.Log("lightBoxes.Length: " + _lightBoxes.Length);
 		}
-		Debug.Log("lightBoxes.Length: " + _lightBoxes.Length);
 		return _lightBoxes;
+	}
+	
+	private Car[] GetCars() {
+		if (_cars == null) {
+			_cars = GameObject.FindObjectsOfType(typeof(Car)) as Car[];
+			foreach (Car car in _cars) {
+				Debug.Log("Found Car at: " + car.transform.position);
+			}
+			Debug.Log("cars.Length: " + _cars.Length);
+		}
+		return _cars;
 	}
 	
 	private void InitializeLights() {
@@ -225,18 +242,38 @@ public class Controller : MonoBehaviour {
 		}
 	}
 	
-	float _sliderValue = 1.8f;
-	float _minSliderValue = 1.8f;
-	float _maxSliderValue = 4.0f;
+	float _sphereRadius = 1.8f;
+	float _minSphereRadius = 1.8f;
+	float _maxSphereRadius = 4.0f;
+	
+	float _minDimstep = 0.1f;
+	float _maxDimstep = 0.5f;
+		
+	
+	//GUISkin mainGUISkin;
 	
 	void OnGUI(){
-		GUI.Box (new Rect (0,0,100,50), "Top-left");
-		//GUI.Box (new Rect (Screen.width - 100,0,100,50), "Top-right");
+		//GUI.skin = mainGUISkin;
 		
-		_sliderValue = GUI.HorizontalSlider(new Rect(Screen.width - 100, 0, 100, 30), _sliderValue, _minSliderValue, _maxSliderValue);
-		SetSphereColliderRadius(_sliderValue);
+		GUI.Box (new Rect (0, 0, 120, 80), "Switch scenes");
 		
-		GUI.Box (new Rect (0,Screen.height - 50,100,50), "Bottom-left");
+		if (GUI.Button(new Rect(10, 25, 100, 20), "Main camera")) {
+			SwitchToMainCamera();
+		}
+		
+		if (GUI.Button(new Rect(10, 50, 100, 20), "Car cameras")) {
+			SwitchBetweenCarCameras();
+		}
+		
+		GUI.Box (new Rect(Screen.width - 160, 0, 160, 150), "Sensor distance");
+		_sphereRadius = GUI.HorizontalSlider(new Rect(Screen.width - 150, 25, 150, 20), _sphereRadius, _minSphereRadius, _maxSphereRadius);
+		SetSphereColliderRadius(_sphereRadius);
+		GUI.Label(new Rect(Screen.width - 150, 45, 150, 20), "Dimming speed: up");
+		_dimStepUp = GUI.HorizontalSlider(new Rect(Screen.width - 150, 75, 150, 20), _dimStepUp, _minDimstep, _maxDimstep);
+		GUI.Label(new Rect(Screen.width - 150, 95, 150, 20), "Dimming speed: down");
+		_dimStepDown = GUI.HorizontalSlider(new Rect(Screen.width - 150, 125, 150, 20), _dimStepDown, _minDimstep, _maxDimstep);
+		
+		GUI.Box (new Rect (0,Screen.height - 50, 100, 50), "Bottom-left");
 		GUI.Box (new Rect (Screen.width - 100,Screen.height - 50,100,50), "Bottom-right");
 	}
 	
@@ -248,5 +285,42 @@ public class Controller : MonoBehaviour {
 		}
 	}
 	
+	private void SwitchToMainCamera() {
+		_mainCamera.enabled = true;
+		DisableAllCarCameras();
+	}
+	
+	private void SwitchBetweenCarCameras() {
+		_mainCamera.enabled = false;
+		EnableNextCarCamera();
+	}
+	
+	private void DisableAllCarCameras() {
+		foreach (Car car in GetCars()) {
+			car.GetCamera().enabled = false;
+		}
+	}
+	
+	private void EnableNextCarCamera() {
+		Car[] cars = GetCars();
+		for (int i = 0; i < cars.Length; i++) {
+			Debug.Log("EnableNextCarCamera: camera " + i);
+			if (cars[i].GetCamera().enabled == true) {
+				Debug.Log("EnableNextCarCamera: camera " + i + "is enabled and will now be disabled");
+				cars[i].GetCamera().enabled = false;
+				int nextCamera = i+1;
+				if (nextCamera >= cars.Length) {
+					nextCamera = 0;
+				}
+				Debug.Log("EnableNextCarCamera: camera " + nextCamera + " will now be enabled");
+				cars[nextCamera].GetCamera().enabled = true;
+				return;
+			}
+		}
+		
+		// no car camera is active
+		Debug.Log("EnableNextCarCamera: No camera was enabled. Camera " + 0 + " will now be enabled");
+		cars[0].GetCamera().enabled = true;
+	}
 	
 }

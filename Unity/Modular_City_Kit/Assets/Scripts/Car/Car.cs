@@ -2,14 +2,22 @@
 using System.Collections;
 
 public class Car : MonoBehaviour {
+	
+	private Camera _camera;
 
 	// Use this for initialization
 	void Start () {
-		//iTween.MoveTo(gameObject, iTween.Hash("path", iTweenPath.GetPath("Lane1"), "time", 20, "easetype", iTween.EaseType.easeInOutSine));
+		_camera = (Camera) GetComponentInChildren(typeof(Camera));
+		Debug.Log("found camera in Car at " + _camera.transform.position);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		//iTween.LookTo(gameObject, iTween.Hash("path", iTweenPath.GetPath("Lane1"), "time", 20, "easetype", iTween.EaseType.easeInOutSine));
+		
 	}
+	
+	public Camera GetCamera() {
+		return _camera;
+	}
+	
 }
