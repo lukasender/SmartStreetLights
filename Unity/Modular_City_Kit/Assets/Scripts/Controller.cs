@@ -225,15 +225,17 @@ public class Controller : MonoBehaviour {
 		}
 	}
 	
-	float sliderValue = 1.8f;
-	float minSliderValue = 1.8f;
-	float maxSliderValue = 4.0f;
+	float _sliderValue = 1.8f;
+	float _minSliderValue = 1.8f;
+	float _maxSliderValue = 4.0f;
 	
 	void OnGUI(){
 		GUI.Box (new Rect (0,0,100,50), "Top-left");
 		//GUI.Box (new Rect (Screen.width - 100,0,100,50), "Top-right");
-		sliderValue = GUI.HorizontalSlider(new Rect(Screen.width - 100, 0, 100, 30), sliderValue, minSliderValue, maxSliderValue);
-		SetSphereColliderRadius(sliderValue);
+		
+		_sliderValue = GUI.HorizontalSlider(new Rect(Screen.width - 100, 0, 100, 30), _sliderValue, _minSliderValue, _maxSliderValue);
+		SetSphereColliderRadius(_sliderValue);
+		
 		GUI.Box (new Rect (0,Screen.height - 50,100,50), "Bottom-left");
 		GUI.Box (new Rect (Screen.width - 100,Screen.height - 50,100,50), "Bottom-right");
 	}
