@@ -10,7 +10,8 @@ using SmartStreetLights.Exception;
 public class Controller : MonoBehaviour {
 	
 	private float _maxIntensity = 5.1f;
-	private float _dimStep = 0.1f;
+	private float _dimStepUp = 0.1f;
+	private float _dimStepDown = 0.3f;
 	
 	public List<StreetLight> lights = new List<StreetLight>();
 	// An array of all LightBox'es
@@ -30,6 +31,8 @@ public class Controller : MonoBehaviour {
 	private Vector3 _lightBoxScale = new Vector3(0, 0, 0);
 	
 	private List<StreetLightAction> _running = new List<StreetLightAction>();
+	
+	private float _sphereColliderScale;
 	
 	private class StreetLightAction {
 		public StreetLight light;
@@ -180,7 +183,7 @@ public class Controller : MonoBehaviour {
 	
 	private void PerformRunnings() {
 		foreach (StreetLightAction la in _running) {
-			PerformLightAction(la, _dimStep);
+			PerformLightAction(la);
 		}
 	}
 	
@@ -200,15 +203,15 @@ public class Controller : MonoBehaviour {
 		}
 	}
 	
-	private void PerformLightAction(StreetLightAction la, float dimStep) {
+	private void PerformLightAction(StreetLightAction la) {
 		Action action = la.action;
 		StreetLight light = la.light;
 		switch (action) {
 		case Action.DimUp:
-			light.DimUp(dimStep);
+			light.DimUp(_dimStepUp);
 			break;
 		case Action.DimDown:
-			light.DimDown(dimStep);
+			light.DimDown(_dimStepDown);
 			break;
 		case Action.LightOn:
 			light.On();
@@ -221,4 +224,27 @@ public class Controller : MonoBehaviour {
 			throw new UnityException("No Action provided!");
 		}
 	}
+	
+	float sliderValue = 1.8f;
+	float minSliderValue = 1.8f;
+	float maxSliderValue = 4.0f;
+	
+	void OnGUI(){
+		GUI.Box (new Rect (0,0,100,50), "Top-left");
+		//GUI.Box (new Rect (Screen.width - 100,0,100,50), "Top-right");
+		sliderValue = GUI.HorizontalSlider(new Rect(Screen.width - 100, 0, 100, 30), sliderValue, minSliderValue, maxSliderValue);
+		SetSphereColliderRadius(sliderValue);
+		GUI.Box (new Rect (0,Screen.height - 50,100,50), "Bottom-left");
+		GUI.Box (new Rect (Screen.width - 100,Screen.height - 50,100,50), "Bottom-right");
+	}
+	
+	private void SetSphereColliderRadius(float radius) {
+		LightBox[] boxes = GetLightBoxes();
+		foreach (LightBox box in boxes) {
+			SphereCollider collider = (SphereCollider) box.collider;
+			collider.radius = radius;
+		}
+	}
+	
+	
 }
