@@ -52,6 +52,7 @@
      <Compile Include="Assets\Scripts\Lights\Action.cs" />
      <Compile Include="Assets\Scripts\Lights\LightBox.cs" />
      <Compile Include="Assets\Scripts\Lights\StreetLight.cs" />
+     <Compile Include="Assets\Scripts\Lights\StreetPointLight.cs" />
      <Compile Include="Assets\Scripts\Message\Message.cs" />
      <Compile Include="Assets\Scripts\Message\ObjectDetectedMessage.cs" />
      <Compile Include="Assets\Scripts\Message\ObjectEnterMessage.cs" />

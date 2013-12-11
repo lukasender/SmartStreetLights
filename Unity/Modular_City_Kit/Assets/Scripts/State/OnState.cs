@@ -13,6 +13,7 @@ namespace SmartStreetLights.State
 		
 		public void Off(StreetLight light) {
 			light.GetLight().intensity = 0;
+			light.GetPointLight().intensity = 0;
 			light.SetState(new OffState());
 			Debug.Log("SSL: " + light.GetId() + ", light.intensity: " + light.GetLight().intensity);
 		}

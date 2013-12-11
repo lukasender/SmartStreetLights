@@ -11,6 +11,8 @@ namespace SmartStreetLights.Lights {
 		private int _id;
 		private float _maxIntensity;
 		
+		private StreetPointLight _pointLight;
+		
 		private State _state;
 		
 		public int GetId() {
@@ -32,6 +34,11 @@ namespace SmartStreetLights.Lights {
 		void Start () {
 			light.color = Color.white;
 			light.intensity = 0;
+			
+			_pointLight = (StreetPointLight) GetComponentInChildren(typeof(StreetPointLight));
+			_pointLight.GetLight().color = Color.white;
+			_pointLight.GetLight().intensity = 0;
+			
 			SetState(new OffState());
 		}
 		
@@ -42,6 +49,10 @@ namespace SmartStreetLights.Lights {
 		
 		public Light GetLight() {
 			return light;
+		}
+		
+		public Light GetPointLight() {
+			return _pointLight.GetLight();
 		}
 		
 		public void ToggleOnOff() {

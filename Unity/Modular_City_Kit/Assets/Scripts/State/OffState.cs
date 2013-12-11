@@ -9,6 +9,7 @@ namespace SmartStreetLights.State
 	{
 		public void On(StreetLight light) {
 			light.GetLight().intensity = light.GetMaxIntensity();
+			light.GetPointLight().intensity = light.GetMaxIntensity();
 			Debug.Log ("SSL: " + light.GetId() + ", light.intensity: " + light.GetLight().intensity);
 			light.SetState(new OnState());
 		}

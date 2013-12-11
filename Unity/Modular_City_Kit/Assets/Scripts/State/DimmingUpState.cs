@@ -9,12 +9,14 @@ namespace SmartStreetLights.State
 	{
 		public void On(StreetLight light) {
 			light.GetLight().intensity = light.GetMaxIntensity();
+			light.GetPointLight().intensity = light.GetMaxIntensity();
 			light.SetState(new OnState());
 			Debug.Log ("SSL: " + light.GetId() + ", light.intensity: " + light.GetLight().intensity);
 		}
 		
 		public void Off(StreetLight light) {
 			light.GetLight().intensity = 0;
+			light.GetPointLight().intensity = 0;
 			light.SetState(new OffState());
 			Debug.Log("SSL: " + light.GetId() + ", light.intensity: " + light.GetLight().intensity);
 		}
@@ -25,10 +27,12 @@ namespace SmartStreetLights.State
 			if (l.intensity < light.GetMaxIntensity()) {
 				if ((l.intensity + step) >= light.GetMaxIntensity()) {
 					l.intensity = light.GetMaxIntensity();
+					light.GetPointLight().intensity = light.GetMaxIntensity();
 					Debug.Log("StreetLight.DimUp(): max level reached");
 					light.SetState(new OnState());
 				} else {
 					l.intensity += step;
+					light.GetPointLight().intensity += step;
 					Debug.Log ("DimUp(): set light.intensity to '" + l.intensity + "'");
 					// max level not reached, remain in this state
 				}
