@@ -223,7 +223,7 @@ public class Controller : MonoBehaviour {
 	
 	float _sphereRadius = 2.8f;
 	float _minSphereRadius = 1.8f;
-	float _maxSphereRadius = 4.0f;
+	float _maxSphereRadius = 5.0f;
 	
 	float _minDimstep = 0.1f;
 	float _maxDimstep = 0.5f;
