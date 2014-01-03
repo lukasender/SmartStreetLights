@@ -60,6 +60,11 @@ public class Controller : MonoBehaviour {
 	void Update () {
 		PerformRunnings();
 		CleanRunnings();
+		if (MouseNotMovedForSpecificTime()) {
+			GUIFadeIn();
+		} else {
+			GUIFadeOut();
+		}
 	}
 	
 	public void ReceiveMessage(Message message) {
@@ -221,6 +226,11 @@ public class Controller : MonoBehaviour {
 		}
 	}
 	
+	// GUI fade in/out settings
+	float _alphaGUI = 0.0f;
+	float _timeLastMouseMovement;
+	float _timeDelta = 2.0f; // [sec] fade out GUI after mouse didn't move for 2 sec.
+	
 	float _sphereRadius = 2.8f;
 	float _minSphereRadius = 1.8f;
 	float _maxSphereRadius = 5.0f;
@@ -232,6 +242,11 @@ public class Controller : MonoBehaviour {
 	
 	void OnGUI(){
 		//GUI.skin = mainGUISkin;
+		// let the GUI actually fade in/out.
+		Color guiColor = GUI.color;
+		guiColor.a = _alphaGUI;
+		GUI.color = guiColor;
+			
 		GUI.Box (new Rect (0, 0, 120, 80), "Switch scenes");
 		
 		// Camera and scene buttons
@@ -290,6 +305,37 @@ public class Controller : MonoBehaviour {
 		// GUI.Box (new Rect (Screen.width - 100,Screen.height - 50,100,50), "Bottom-right");
 	}
 	
+	private bool MouseNotMovedForSpecificTime() {
+		float mouseX = Input.GetAxis("Mouse X");
+		float mouseY = Input.GetAxis("Mouse Y");
+		Debug.Log("MouseX " + mouseX);
+		Debug.Log("MouseY " + mouseY);
+		
+		if (mouseX > 0 || mouseX < 0 || mouseY > 0 || mouseY < 0) {
+			_timeLastMouseMovement = Time.time;
+		}
+		
+		if ((_timeLastMouseMovement + _timeDelta) > Time.time) {
+			// mouse hasn't moved since about two seconds
+			return true;
+		}
+		return false;
+	}
+	
+	private void GUIFadeIn() {
+		_alphaGUI += 0.1f;
+		if (_alphaGUI > 1.0f) {
+			_alphaGUI = 1.0f;
+		}
+	}
+	
+	private void GUIFadeOut() {
+		_alphaGUI -= 0.01f;
+		if (_alphaGUI < 0.0f) {
+			_alphaGUI = 0.0f;
+		}
+	}
+	
 	private void SetSphereColliderRadius(float radius) {
 		LightBox[] boxes = GetLightBoxes();
 		foreach (LightBox box in boxes) {
@@ -339,7 +385,7 @@ public class Controller : MonoBehaviour {
 	private void SetScence(float sphereRadius, float dimStepUp, float dimStepDown) {
 		_sphereRadius = sphereRadius;
 		_dimStepUp = dimStepUp;
-		_dimStepDown = _dimStepDown;
+		_dimStepDown = dimStepDown;
 		SetSphereColliderRadius(_sphereRadius);
 	}
 }
