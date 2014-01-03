@@ -228,22 +228,56 @@ public class Controller : MonoBehaviour {
 	float _minDimstep = 0.1f;
 	float _maxDimstep = 0.5f;
 		
-	
 	//GUISkin mainGUISkin;
 	
 	void OnGUI(){
 		//GUI.skin = mainGUISkin;
-		
 		GUI.Box (new Rect (0, 0, 120, 80), "Switch scenes");
 		
+		// Camera and scene buttons
+		// Main camera
 		if (GUI.Button(new Rect(10, 25, 100, 20), "Main camera")) {
 			SwitchToMainCamera();
 		}
-		
+		// Car cameras
 		if (GUI.Button(new Rect(10, 50, 100, 20), "Car cameras")) {
 			SwitchBetweenCarCameras();
 		}
 		
+		// Scenes
+		if (GUI.Button(new Rect(10, 75, 100, 20), "Scene 1")) {
+			SetScence(
+				1.8f, // sphereRadius
+				0.1f, // dimStepUp
+				0.3f  // dimStepDown
+			);
+		}
+		
+		if (GUI.Button(new Rect(10, 100, 100, 20), "Scene 2")) {
+			SetScence(
+				2.8f, // sphereRadius
+				0.1f, // dimStepUp
+				0.3f  // dimStepDown
+			);
+		}
+		
+		if (GUI.Button(new Rect(10, 125, 100, 20), "Scene 3")) {
+			SetScence(
+				5.0f, // sphereRadius
+				0.3f, // dimStepUp
+				0.3f  // dimStepDown
+			);
+		}
+		
+		if (GUI.Button(new Rect(10, 150, 100, 20), "Scene 4")) {
+			SetScence(
+				5.0f, // sphereRadius
+				0.1f, // dimStepUp
+				0.1f  // dimStepDown
+			);
+		}
+		
+		// Sliders
 		GUI.Box (new Rect(Screen.width - 160, 0, 160, 150), "Sensor distance");
 		_sphereRadius = GUI.HorizontalSlider(new Rect(Screen.width - 150, 25, 150, 20), _sphereRadius, _minSphereRadius, _maxSphereRadius);
 		SetSphereColliderRadius(_sphereRadius);
@@ -252,8 +286,8 @@ public class Controller : MonoBehaviour {
 		GUI.Label(new Rect(Screen.width - 150, 95, 150, 20), "Dimming speed: down");
 		_dimStepDown = GUI.HorizontalSlider(new Rect(Screen.width - 150, 125, 150, 20), _dimStepDown, _minDimstep, _maxDimstep);
 		
-		GUI.Box (new Rect (0,Screen.height - 50, 100, 50), "Bottom-left");
-		GUI.Box (new Rect (Screen.width - 100,Screen.height - 50,100,50), "Bottom-right");
+		// GUI.Box (new Rect (0,Screen.height - 50, 100, 50), "Bottom-left");
+		// GUI.Box (new Rect (Screen.width - 100,Screen.height - 50,100,50), "Bottom-right");
 	}
 	
 	private void SetSphereColliderRadius(float radius) {
@@ -302,4 +336,10 @@ public class Controller : MonoBehaviour {
 		cars[0].GetCamera().enabled = true;
 	}
 	
+	private void SetScence(float sphereRadius, float dimStepUp, float dimStepDown) {
+		_sphereRadius = sphereRadius;
+		_dimStepUp = dimStepUp;
+		_dimStepDown = _dimStepDown;
+		SetSphereColliderRadius(_sphereRadius);
+	}
 }
