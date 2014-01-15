@@ -21,6 +21,8 @@ public class Controller : MonoBehaviour {
 	
 	private Camera _mainCamera = null;
 	
+	private StreetLight _testLight = null;
+	
 	/// <summary>
 	/// Offset of the "SmartStreetLights" group.
 	/// The group contains all the other SmartStreetLights.
@@ -54,6 +56,8 @@ public class Controller : MonoBehaviour {
 		_cars = GetCars();
 		_mainCamera = GameObject.Find("Main Camera").camera;
 		SwitchToMainCamera();
+		_testLight = GetLightById(20);
+		_testLight.GetLight().color = Color.red;
 	}
 	
 	// Update is called once per frame
@@ -65,6 +69,9 @@ public class Controller : MonoBehaviour {
 		} else {
 			GUIFadeOut();
 		}
+		
+		long time = _testLight.getOnTime();
+		Debug.Log ("----------------------------------------------------------- ontime: " + time);
 	}
 	
 	public void ReceiveMessage(Message message) {

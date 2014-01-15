@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 
 
@@ -14,6 +15,10 @@ namespace SmartStreetLights.Lights {
 		private StreetPointLight _pointLight;
 		
 		private State _state;
+		
+		private long _onTime; // in ms
+		private bool _counterStarted;
+		private long _startTime; // in ms
 		
 		public int GetId() {
 			return _id;
@@ -39,7 +44,7 @@ namespace SmartStreetLights.Lights {
 			_pointLight.GetLight().color = Color.white;
 			_pointLight.GetLight().intensity = 0;
 			
-			SetState(new OffState());
+			SetState(new OffState(this));
 		}
 		
 		// Update is called once per frame
@@ -90,6 +95,42 @@ namespace SmartStreetLights.Lights {
 			}
 			return false;
 		}
+		
+		/// <summary>
+		/// Increases the on time.
+		/// </summary>
+		/// <param name='increaseBy'>
+		/// Increase by. in ms
+		/// </param>
+		public void increaseOnTime(long increaseBy) {
+			_onTime += increaseBy;
+		}
+		
+		public long getOnTime() {
+			if (_counterStarted) {
+				return currentTime() - _startTime + _onTime;
+			}
+			return _onTime;
+		}
+		
+		public void startCounter() {
+			if (!_counterStarted) {
+				_counterStarted = true;
+				_startTime = currentTime();
+			}
+		}
+		
+		public void stopCounter() {
+			if (_counterStarted) {
+				_counterStarted = false;
+				_onTime += currentTime() - _startTime;
+			}
+		}
+		
+		private long currentTime() {
+			return (long) Convert.ToInt64((Time.time * 1000));
+		}
+		
 	}
 	
 }
