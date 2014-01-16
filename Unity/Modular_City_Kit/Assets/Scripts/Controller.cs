@@ -57,7 +57,6 @@ public class Controller : MonoBehaviour {
 		_mainCamera = GameObject.Find("Main Camera").camera;
 		SwitchToMainCamera();
 		_testLight = GetLightById(20);
-		_testLight.GetLight().color = Color.red;
 	}
 	
 	// Update is called once per frame
