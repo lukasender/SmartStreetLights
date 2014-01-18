@@ -3,6 +3,10 @@ SmartStreetLights
 
 University Project
 
+### Engine
+----------
+Unity 4.2.1f
+
 ### Assets
 ----------
 
